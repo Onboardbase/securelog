@@ -22,7 +22,7 @@ const checkForPotentialSecrets = (args: any[]) => {
   try {
     const projectSecrets = process.env || {};
     const secretValues = Object.values(projectSecrets);
-    args.map((argument: string) => {
+    args.map((argument: any) => {
       if (secretValues.includes(argument))
         console.error(
           `${argument} is a valid secret for the key: ${Object.keys(
