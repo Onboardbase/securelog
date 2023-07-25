@@ -3,7 +3,6 @@
 # Secure log [![Release](https://github.com/onboardbase/secure-log/actions/workflows/main.yml/badge.svg)](https://github.com/onboardbase/secure-log/actions/workflows/main.yml)[![Lint](https://github.com/onboardbase/secure-log/actions/workflows/main.yml/badge.svg)](https://github.com/onboardbase/secure-log/actions/workflows/main.yml)
 
 A better and more secure console logging experience.
-
 </div>
 
 # Contents
@@ -15,7 +14,6 @@ A better and more secure console logging experience.
 - [License](#license)
 
 ## Install
-
 To use `log`,
 
 ```bash
@@ -23,23 +21,22 @@ yarn add @onboardbase/secure-log # npm i @onboardbase/secure-log
 ```
 
 ## Usage
-
 Import the SecureLog library at the top level of your project.
 
 ```js
 import SecureLog from '@onboardbase/secure-log';
-new SecureLog();
+new SecureLog(); // For JS projects, use new SecureLog.default() 
 
 console.log('random value'); // Onboardbase Signatures here: random value.
 ```
 
-Then you can your `console.log` as usual. This should include the `SecureLog` prefix and log your value.
+Then you can use your `console.log` as usual. This should include the `SecureLog` prefix and log your value.
 
-The SecureLog Library also accepts an object
+The SecureLog Library also accepts an object.
 
 ```js
 export default interface IOptions {
-  disableOn?: 'development' | 'production'; // You can use this to specify if you want the SecureLog library to be disabled in a certain environment
+  disableOn?: 'development' | 'production'; // You can use this to specify if you want the SecureLog library to be disabled in a specific environment
   disableConsoleOn?: 'development' | 'production'; // You can use this to disable console entirely in a specific environment
 }
 ```
@@ -48,12 +45,12 @@ Example:
 
 ```js
 new SecureLog({ disableConsoleOn: 'development' }); // This will disable the SecureLog library on development environment.
-console.log('sensitive secret here'); // This wont be executed.
+console.log('sensitive secret here'); // This won't be executed.
 ```
 
-The `disableConsoleOn` option that was passed to the `SecureLog` library will make sure that the `console.log` statement is not executed.
+The `disableConsoleOn` option passed to the `SecureLog` library will ensure that the `console.log` statement is not executed.
 
-The `disableOn` && `disableConsoleOn` depends on your `process.env.NODE_ENV` to work perfectly. That is, it compares the environment passed from the `disableOn` || `disableConsoleOn` option with the environment in your `process.env.NODE_ENV` to know when to disable the SecureLog library or the `console` statements itself..
+The `disableOn` && `disableConsoleOn` depends on your `process.env.NODE_ENV` to work perfectly. That is, it compares the environment passed from the `disableOn` || `disableConsoleOn` option with the environment in your `process.env.NODE_ENV` to know when to disable the SecureLog library or the `console` statements itself.
 
 The SecureLog library scans the `arguments` passed to the `console.log` function to check if any of the `...args` inside your `console.log` function is a potential secret. It does this by comparing the `arguments` passed to `console.log` with the values of your current environment: `process.env`. It throws an error if any potential secret is found.
 
@@ -81,7 +78,6 @@ Contributions of any kind are welcome! See the [contributing guide](contributing
 
 ### Features
 
-- [ ] Disable logging entirely in a defined environment instead of hiding secrets.
 - [ ] Support for `console.table`.
 - [ ] AI to scan values passed to `console.log` and report potential sensitive logs.
 
