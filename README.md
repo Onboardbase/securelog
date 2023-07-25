@@ -25,12 +25,12 @@ Import the SecureLog library at the top level of your project.
 
 ```js
 import SecureLog from '@onboardbase/secure-log';
-new SecureLog();
+new SecureLog(); // For JS projects, use new WokeLog.default() 
 
 console.log('random value'); // Onboardbase Signatures here: random value.
 ```
 
-Then you can your `console.log` as usual. This should include the `SecureLog` prefix and log your value.
+Then you can use your `console.log` as usual. This should include the `SecureLog` prefix and log your value.
 
 The SecureLog Library also accepts an object.
 
@@ -45,7 +45,7 @@ Example:
 
 ```js
 new SecureLog({ disableConsoleOn: 'development' }); // This will disable the SecureLog library on development environment.
-console.log('sensitive secret here'); // This wont be executed.
+console.log('sensitive secret here'); // This won't be executed.
 ```
 
 The `disableConsoleOn` option passed to the `SecureLog` library will ensure that the `console.log` statement is not executed.
