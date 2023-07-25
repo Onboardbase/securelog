@@ -25,7 +25,7 @@ Import the SecureLog library at the top level of your project.
 
 ```js
 import SecureLog from '@onboardbase/secure-log';
-new SecureLog(); // For JS projects, use new WokeLog.default() 
+new SecureLog(); // For JS projects, use new SecureLog.default() 
 
 console.log('random value'); // Onboardbase Signatures here: random value.
 ```
