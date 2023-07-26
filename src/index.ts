@@ -40,7 +40,7 @@ class ObbLog {
   cachedLog: Console;
   options: IOptions;
 
-  constructor(options: IOptions) {
+  constructor(options?: IOptions) {
     this.options = options;
     if (
       options &&
