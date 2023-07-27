@@ -123,6 +123,7 @@ class ObbLog {
   error(...data: any[]): void;
   error(message?: any, ...optionalParams: any[]): void;
   error(...args: any): void {
+    const modArgs = args || [];
     const disableConsole =
       this.options &&
       this.options.disableConsoleOn &&
@@ -130,13 +131,13 @@ class ObbLog {
 
     if (disableConsole) return;
     else {
-      if (!args[1].skipValidationCheck) {
-        checkForPotentialSecrets(args);
+      if (!modArgs[1]?.skipValidationCheck) {
+        checkForPotentialSecrets(modArgs);
       }
 
-      const logValue = args[1].skipValidationCheck
-        ? [LOG_PREFIX, args[0]]
-        : [LOG_PREFIX, ...args];
+      const logValue = modArgs[1]?.skipValidationCheck
+        ? [LOG_PREFIX, modArgs[0]]
+        : [LOG_PREFIX, ...modArgs];
 
       this.cachedLog.error.apply(console, logValue);
     }
