@@ -3,6 +3,7 @@
 # Secure log [![Release](https://github.com/onboardbase/secure-log/actions/workflows/main.yml/badge.svg)](https://github.com/onboardbase/secure-log/actions/workflows/main.yml)[![Lint](https://github.com/onboardbase/secure-log/actions/workflows/main.yml/badge.svg)](https://github.com/onboardbase/secure-log/actions/workflows/main.yml)
 
 A better and more secure console logging experience. Detects and prevents leaking secrets and API tokens into your logs.
+
 </div>
 
 # Contents
@@ -14,6 +15,7 @@ A better and more secure console logging experience. Detects and prevents leakin
 - [License](#license)
 
 ## Install
+
 To use `log`,
 
 ```bash
@@ -21,11 +23,12 @@ yarn add @onboardbase/secure-log # npm i @onboardbase/secure-log
 ```
 
 ## Usage
+
 Import the SecureLog library at the top level of your project.
 
 ```js
 import SecureLog from '@onboardbase/secure-log';
-new SecureLog(); // For JS projects, use new SecureLog.default() 
+new SecureLog(); // For JS projects, use new SecureLog.default()
 
 console.log('random value'); // Onboardbase Signatures here: random value.
 ```
@@ -66,7 +69,7 @@ This will throw a warning if an actual `AWS_ACCESS_KEY_ID` is found in the `proc
 
 The SecureLog library currently only supports these console methods:
 
-- `console.log`, `console.clear`, `console.warn`, `console.profileEnd`, `console.debug`, `console.info`, `console.error`
+- `console.log`, `console.clear`, `console.warn`, `console.profileEnd`, `console.debug`, `console.info`, `console.error`, `console.table`
 
 # Contributing
 
@@ -78,7 +81,6 @@ Contributions of any kind are welcome! See the [contributing guide](contributing
 
 ### Features
 
-- [ ] Support for `console.table`.
 - [ ] AI to scan values passed to `console.log` and report potential sensitive logs.
 
 # License
