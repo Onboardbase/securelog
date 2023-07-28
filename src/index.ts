@@ -18,25 +18,58 @@ const getGlobalObject = () => {
 
 const LOG_PREFIX = 'Onboardbase Signatures here:';
 
+const checkForStringOccurences = (value: string) => {
+  const projectSecrets = process.env || {};
+  const secretValues = Object.values(projectSecrets);
+
+  if (value && secretValues.includes(value)) {
+    console.error(
+      `${value} is a valid secret for the key: ${Object.keys(
+        projectSecrets
+      ).find(key => projectSecrets[key] === value)}`,
+      { skipValidationCheck: true }
+    );
+  }
+};
+
+const isString = (value: any) => typeof value === 'string';
+const isObject = (value: any) => Object.keys(value).length;
+const isArray = (value: any) => Array.isArray(value);
+
 const checkForPotentialSecrets = (args: any[]) => {
   try {
-    const projectSecrets = process.env || {};
-    const secretValues = Object.values(projectSecrets);
     args.map((argument: any) => {
-      if (secretValues.includes(argument))
-        console.error(
-          `${argument} is a valid secret for the key: ${Object.keys(
-            projectSecrets
-          ).find(key => projectSecrets[key] === argument)}`,
-          { skipValidationCheck: true }
-        );
+      if (isString(argument)) {
+        checkForStringOccurences(argument);
+      }
+
+      if (isObject(argument)) {
+        const objectValue = Object.values(argument);
+        checkForPotentialSecrets(objectValue);
+      }
+
+      if (isArray(argument)) {
+        argument.map((arrayValue: any) => {
+          if (isString(arrayValue)) {
+            checkForPotentialSecrets(arrayValue);
+          }
+
+          if (isObject(arrayValue)) {
+            checkForPotentialSecrets(Object.values(arrayValue));
+          }
+
+          if (isArray(arrayValue)) {
+            checkForPotentialSecrets(arrayValue);
+          }
+        });
+      }
     });
   } catch (error) {
     console.error(error, { skipValidationCheck: true });
   }
 };
 
-class ObbLog {
+class SecureLog {
   cachedLog: Console;
   options: IOptions;
 
@@ -51,7 +84,7 @@ class ObbLog {
 
     const globalObject: any = getGlobalObject();
     if (globalObject.obbinitialized) {
-      return globalObject.console as ObbLog;
+      return globalObject.console as SecureLog;
     }
     this.cachedLog = getGlobalConsoleObject();
     globalObject.console = this;
@@ -173,7 +206,7 @@ class ObbLog {
   }
   table(tabularData?: any, properties?: string[]): void;
   table(tabularData: any, properties?: readonly string[]): void;
-  table(tabularData?: unknown, properties?: unknown): void {
+  table(...args: any): void {
     throw new Error('Method not implemented.');
   }
   time(label?: string): void;
@@ -231,6 +264,4 @@ class ObbLog {
   }
 }
 
-//const instance = new ObbLog();
-
-export default ObbLog;
+export default SecureLog;
