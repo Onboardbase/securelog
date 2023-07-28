@@ -1,7 +1,27 @@
-import Log from '../src';
+const Log = require('../dist');
 
-// describe('blah', () => {
-//   it('works', () => {
-//     expect(sum(1, 1)).toEqual(2);
-//   });
-// });
+const mockedLog = jest.fn();
+
+const mockConsoleLog = () => {
+  console.log = mockedLog;
+};
+
+let secureLog;
+const setup = (options = {}) => {
+  mockConsoleLog();
+  secureLog = new Log.default(options);
+};
+
+describe('Test console.log', () => {
+  beforeAll(() => {
+    setup();
+  });
+  it('should have called console.log with hello', () => {
+    secureLog.log('hello');
+
+    expect(mockedLog).toHaveBeenCalledWith(
+      'Onboardbase Signatures here:',
+      'hello'
+    );
+  });
+});

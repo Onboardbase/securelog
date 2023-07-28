@@ -1,0 +1,5 @@
+{
+  "bail": 1,
+  "verbose": true,
+  "setupFiles": ["jest-setup.js"]
+}
