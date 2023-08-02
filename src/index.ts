@@ -22,12 +22,18 @@ const checkForStringOccurences = (value: string, cachedConsole: Console) => {
   const projectSecrets = process.env || {};
   const secretValues = Object.values(projectSecrets);
 
-  if (value && secretValues.includes(value)) {
-    cachedConsole.error(
+  if (value) {
+    if (secretValues.includes(value)) {
+      cachedConsole.error(
       `${value} is a valid secret for the key: ${Object.keys(
         projectSecrets
       ).find(key => projectSecrets[key] === value)}`
-    );
+      );
+    }
+    
+    else if (secretValues.some(secret => value.includes(secret))) {
+      cachedConsole.error(`${value} contains some secret value`);
+    }
   }
 };
 
