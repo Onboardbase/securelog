@@ -26,8 +26,7 @@ const checkForStringOccurences = (value: string, cachedConsole: Console) => {
     cachedConsole.error(
       `${value} is a valid secret for the key: ${Object.keys(
         projectSecrets
-      ).find(key => projectSecrets[key] === value)}`,
-      { skipValidationCheck: true }
+      ).find(key => projectSecrets[key] === value)}`
     );
   }
 };
