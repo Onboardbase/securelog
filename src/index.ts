@@ -18,21 +18,21 @@ const getGlobalObject = () => {
 
 const LOG_PREFIX = 'Onboardbase Signatures here:';
 
-const checkForStringOccurences = (value: string) => {
+const checkForStringOccurences = (value: string, cachedConsole: Console) => {
   const projectSecrets = process.env || {};
   const secretValues = Object.values(projectSecrets);
 
   if (value) {
     if (secretValues.includes(value)) {
-      console.error(
-        `${value} is a valid secret for the key: ${Object.keys(
-          projectSecrets
-        ).find(key => projectSecrets[key] === value)}`,
-        { skipValidationCheck: true }
+      cachedConsole.error(
+      `${value} is a valid secret for the key: ${Object.keys(
+        projectSecrets
+      ).find(key => projectSecrets[key] === value)}`
       );
     }
+    
     else if (secretValues.some(secret => value.includes(secret))) {
-      console.error(`${value} contains some secret value`, { skipValidationCheck: true });
+      cachedConsole.error(`${value} contains some secret value`);
     }
   }
 };
@@ -41,30 +41,30 @@ const isString = (value: any) => typeof value === 'string';
 const isObject = (value: any) => Object.keys(value).length;
 const isArray = (value: any) => Array.isArray(value);
 
-const checkForPotentialSecrets = (args: any[]) => {
+const checkForPotentialSecrets = (args: any[], cachedConsole: Console) => {
   try {
     args.map((argument: any) => {
       if (isString(argument)) {
-        checkForStringOccurences(argument);
+        checkForStringOccurences(argument, cachedConsole);
       }
 
       if (isObject(argument)) {
         const objectValue = Object.values(argument);
-        checkForPotentialSecrets(objectValue);
+        checkForPotentialSecrets(objectValue, cachedConsole);
       }
 
       if (isArray(argument)) {
         argument.map((arrayValue: any) => {
           if (isString(arrayValue)) {
-            checkForPotentialSecrets(arrayValue);
+            checkForPotentialSecrets(arrayValue, cachedConsole);
           }
 
           if (isObject(arrayValue)) {
-            checkForPotentialSecrets(Object.values(arrayValue));
+            checkForPotentialSecrets(Object.values(arrayValue), cachedConsole);
           }
 
           if (isArray(arrayValue)) {
-            checkForPotentialSecrets(arrayValue);
+            checkForPotentialSecrets(arrayValue, cachedConsole);
           }
         });
       }
@@ -106,7 +106,7 @@ class SecureLog {
     else {
       if (!isBrowser()) {
       }
-      checkForPotentialSecrets(args);
+      checkForPotentialSecrets(args, this.cachedLog);
       this.cachedLog.log.apply(console, [LOG_PREFIX, ...args]);
     }
   }
@@ -144,7 +144,7 @@ class SecureLog {
 
     if (disableConsole) return;
     else {
-      checkForPotentialSecrets(args);
+      checkForPotentialSecrets(args, this.cachedLog);
       this.cachedLog.debug.apply(console, [LOG_PREFIX, ...args]);
     }
   }
@@ -170,7 +170,7 @@ class SecureLog {
     if (disableConsole) return;
     else {
       if (!modArgs[1]?.skipValidationCheck) {
-        checkForPotentialSecrets(modArgs);
+        checkForPotentialSecrets(modArgs, this.cachedLog);
       }
 
       const logValue = modArgs[1]?.skipValidationCheck
@@ -205,7 +205,7 @@ class SecureLog {
 
     if (disableConsole) return;
     else {
-      checkForPotentialSecrets(args);
+      checkForPotentialSecrets(args, this.cachedLog);
       this.cachedLog.info.apply(console, [LOG_PREFIX, ...args]);
     }
   }
@@ -249,11 +249,11 @@ class SecureLog {
 
     if (disableConsole) return;
     else {
-      if (!args[1].skipValidationCheck) {
-        checkForPotentialSecrets(args);
+      if (!args[1]?.skipValidationCheck) {
+        checkForPotentialSecrets(args, this.cachedLog);
       }
 
-      const logValue = args[1].skipValidationCheck
+      const logValue = args[1]?.skipValidationCheck
         ? ['Warning:', args[0]]
         : [LOG_PREFIX, ...args];
 
