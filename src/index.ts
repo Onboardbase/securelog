@@ -22,13 +22,18 @@ const checkForStringOccurences = (value: string) => {
   const projectSecrets = process.env || {};
   const secretValues = Object.values(projectSecrets);
 
-  if (value && secretValues.includes(value)) {
-    console.error(
-      `${value} is a valid secret for the key: ${Object.keys(
-        projectSecrets
-      ).find(key => projectSecrets[key] === value)}`,
-      { skipValidationCheck: true }
-    );
+  if (value) {
+    if (secretValues.includes(value)) {
+      console.error(
+        `${value} is a valid secret for the key: ${Object.keys(
+          projectSecrets
+        ).find(key => projectSecrets[key] === value)}`,
+        { skipValidationCheck: true }
+      );
+    }
+    else if (secretValues.some(secret => value.includes(secret))) {
+      console.error(`${value} contans some secret key`);
+    }
   }
 };
 
