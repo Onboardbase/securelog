@@ -1,5 +1,6 @@
 name: CI
-on: 
+on:
+  pull_request:
   push:
     branches:
       - main
@@ -15,6 +16,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
+      - name: Install Onboardbase
+        run: |-
+          wget https://onboardbase-cli.fra1.digitaloceanspaces.com/apt/onboardbase-latest.deb \
+          sudo dpkg -i ./onboardbase-latest.deb \
+          onboardbase --version
       - name: Checkout repo
         uses: actions/checkout@v2
 
@@ -31,3 +37,12 @@ jobs:
 
       - name: Build
         run: yarn build
+
+      - name: Test
+        run: yarn test
+      
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          
