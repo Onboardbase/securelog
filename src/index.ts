@@ -244,11 +244,11 @@ class SecureLog {
 
     if (disableConsole) return;
     else {
-      if (!args[1].skipValidationCheck) {
+      if (!args[1]?.skipValidationCheck) {
         checkForPotentialSecrets(args, this.cachedLog);
       }
 
-      const logValue = args[1].skipValidationCheck
+      const logValue = args[1]?.skipValidationCheck
         ? ['Warning:', args[0]]
         : [LOG_PREFIX, ...args];
 
