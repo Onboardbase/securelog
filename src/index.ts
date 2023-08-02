@@ -32,7 +32,7 @@ const checkForStringOccurences = (value: string) => {
       );
     }
     else if (secretValues.some(secret => value.includes(secret))) {
-      console.error(`${value} contans some secret key`);
+      console.error(`${value} contans some secret key`, { skipValidationCheck: true });
     }
   }
 };
