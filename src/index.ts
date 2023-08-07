@@ -29,9 +29,14 @@ const checkForStringOccurences = (value: string, cachedConsole: Console) => {
           projectSecrets
         ).find(key => projectSecrets[key] === value)}`
       );
-    } else if (secretValues.some(secret => value.includes(secret))) {
-      cachedConsole.error(`${value} contains some secret value`);
     }
+    /**
+     * @todo
+     * rewrite secret interpollation
+     */
+    // else if (secretValues.some(secret => value.includes(secret))) {
+    //   cachedConsole.error(`${value} contains some secret value`);
+    // }
   }
 };
 
