@@ -8,10 +8,14 @@ A better and more secure console logging experience. Detects and prevents leakin
 
 # Contents
 
-- [Install](#install)
-- [Usage](#usage)
-- [Roadmap](#roadmap)
+- [Secure log ](#secure-log-)
+- [Contents](#contents)
+  - [Install](#install)
+  - [Usage](#usage)
+    - [Supported console methods](#supported-console-methods)
 - [Contributing](#contributing)
+- [Roadmap](#roadmap)
+    - [Features](#features)
 - [License](#license)
 
 ## Install
@@ -24,7 +28,9 @@ yarn add @onboardbase/secure-log # npm i @onboardbase/secure-log
 
 ## Usage
 
-Import the SecureLog library at the top level of your project.
+Import the SecureLog library at the **top level** of your project.
+
+**Note**: If you are using any secret manager library (e.g dotenv etc) in your project, you should import those first before importing SecureLog.
 
 ```js
 import SecureLog from '@onboardbase/secure-log';
