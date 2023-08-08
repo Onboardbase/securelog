@@ -29,9 +29,14 @@ const checkForStringOccurences = (value: string, cachedConsole: Console) => {
           projectSecrets
         ).find(key => projectSecrets[key] === value)}`
       );
-    } else if (secretValues.some(secret => value.includes(secret))) {
-      cachedConsole.error(`${value} contains some secret value`);
     }
+    /**
+     * @todo
+     * reimplement string interpolation
+     */
+    // else if (secretValues.some(secret => value.includes(secret))) {
+    //   cachedConsole.error(`${value} contains some secret value`);
+    // }
   }
 };
 
@@ -43,32 +48,35 @@ const checkForPotentialSecrets = (args: any[], cachedConsole: Console) => {
   try {
     args.map((argument: any) => {
       if (isString(argument)) {
-        checkForStringOccurences(argument, cachedConsole);
+        return checkForStringOccurences(argument, cachedConsole);
       }
 
       if (isObject(argument)) {
         const objectValue = Object.values(argument);
-        checkForPotentialSecrets(objectValue, cachedConsole);
+        return checkForPotentialSecrets(objectValue, cachedConsole);
       }
 
       if (isArray(argument)) {
         argument.map((arrayValue: any) => {
           if (isString(arrayValue)) {
-            checkForPotentialSecrets(arrayValue, cachedConsole);
+            return checkForPotentialSecrets(arrayValue, cachedConsole);
           }
 
           if (isObject(arrayValue)) {
-            checkForPotentialSecrets(Object.values(arrayValue), cachedConsole);
+            return checkForPotentialSecrets(
+              Object.values(arrayValue),
+              cachedConsole
+            );
           }
 
           if (isArray(arrayValue)) {
-            checkForPotentialSecrets(arrayValue, cachedConsole);
+            return checkForPotentialSecrets(arrayValue, cachedConsole);
           }
         });
       }
     });
   } catch (error) {
-    console.error(error, { skipValidationCheck: true });
+    cachedConsole.error(error, { skipValidationCheck: true });
   }
 };
 
