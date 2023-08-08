@@ -24,8 +24,7 @@ yarn add @onboardbase/secure-log # npm i @onboardbase/secure-log
 
 ## Usage
 
-Import the SecureLog library at the top level of your project.
-**Note**: If you are using any env library (e.g. dotenv) in your project, you should import those first before importing SecureLog.
+Import the SecureLog library at the top level of your project. If you use any env/secret library (e.g. dotenv) in your project, you should import those before importing SecureLog.
 
 ```js
 import SecureLog from '@onboardbase/secure-log';
