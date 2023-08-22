@@ -255,15 +255,10 @@ class SecureLog {
 
     if (disableConsole) return;
     else {
-      if (!args[1]?.skipValidationCheck) {
-        checkForPotentialSecrets(args, this.cachedLog);
+      if (!isBrowser()) {
       }
-
-      const logValue = args[1]?.skipValidationCheck
-        ? ['Warning:', args[0]]
-        : [LOG_PREFIX, ...args];
-
-      this.cachedLog.warn.apply(console, logValue);
+      checkForPotentialSecrets(args, this.cachedLog);
+      this.cachedLog.warn.apply(console, [LOG_PREFIX, ...args]);
     }
   }
   Console: console.ConsoleConstructor;
