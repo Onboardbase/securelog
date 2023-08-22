@@ -24,7 +24,7 @@ yarn add @onboardbase/secure-log # npm i @onboardbase/secure-log
 
 ## Usage
 
-Import the SecureLog library at the top level of your project.
+Import the SecureLog library at the top level of your project. If you use any env/secret library (e.g. dotenv) in your project, you should import those before importing SecureLog.
 
 ```js
 import SecureLog from '@onboardbase/secure-log';
@@ -40,7 +40,7 @@ The SecureLog Library also accepts an object.
 ```js
 export default interface IOptions {
   disableOn?: 'development' | 'production'; // You can use this to specify if you want the SecureLog library to be disabled in a specific environment
-  disableConsoleOn?: 'development' | 'production'; // You can use this to disable console entirely in a specific environment
+  disableConsoleOn?: 'development' | 'production'; // You can use this to disable the console entirely in a specific environment
 }
 ```
 
