@@ -124,9 +124,6 @@ class SecureLog {
 
   assert(...args: any) {
     // do whatever here with the passed parameters
-    this.cachedLog.log(
-      "Normally, this shouldn't be logged, but yeah, it is now being logged."
-    );
     this.cachedLog.assert.apply(null, args);
   }
 
@@ -179,8 +176,8 @@ class SecureLog {
         checkForPotentialSecrets(modArgs, this.cachedLog);
       }
 
-      const logValue = modArgs[1]?.skipValidationCheck
-        ? [LOG_PREFIX, modArgs[0]]
+      const logValue = modArgs?.[1]?.skipValidationCheck
+        ? [LOG_PREFIX, modArgs?.[0]]
         : [LOG_PREFIX, ...modArgs];
 
       this.cachedLog.error.apply(console, logValue);
