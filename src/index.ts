@@ -19,17 +19,18 @@ const getGlobalObject = () => {
 const LOG_PREFIX = 'Onboardbase Signatures here:';
 
 const checkForStringOccurences = (value: string, cachedConsole: Console) => {
-  const projectSecrets = process.env || {};
-  const secretValues = Object.values(projectSecrets);
-
   if (value) {
-    if (secretValues.includes(value)) {
-      cachedConsole.error(
-        `${value} is a valid secret for the key: ${Object.keys(
-          projectSecrets
-        ).find(key => projectSecrets[key] === value)}`
-      );
-    }
+    Object.keys(process.env).map(secretKey => {
+      const secretValue =(process.env || {})[secretKey]
+      const hasMatch = value.includes(secretValue)
+
+      if (hasMatch) {
+
+        cachedConsole.warn(
+          `${secretValue} is present in "${value}" and is a valid secret value for the key: "${secretKey}"`
+            );
+          }
+    })
     /**
      * @todo
      * reimplement string interpolation
@@ -107,7 +108,6 @@ class SecureLog {
       this.options &&
       this.options.disableConsoleOn &&
       process.env.NODE_ENV === this.options?.disableConsoleOn;
-
     if (disableConsole) return;
     else {
       if (!isBrowser()) {
