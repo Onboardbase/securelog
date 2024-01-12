@@ -53,7 +53,7 @@ console.log('sensitive secret here'); // This won't be executed.
 
 The `disableConsoleOn` option passed to the `SecureLog` library will ensure that the `console.log` statement is not executed.
 
-The `disableOn` && `disableConsoleOn` depends on your `process.env.NODE_ENV` to work perfectly. That is, it compares the environment passed from the `disableOn` || `disableConsoleOn` option with the environment in your `process.env.NODE_ENV` to know when to disable the SecureLog library or the `console` statements itself.
+The `disableOn` && `disableConsoleOn` depend on your `process.env.NODE_ENV` to work perfectly. That is, it compares the environment passed from the `disableOn` || `disableConsoleOn` option with the environment in your `process.env.NODE_ENV` to know when to disable the SecureLog library or the `console` statements itself.
 
 The SecureLog library scans the `arguments` passed to the `console.log` function to check if any of the `...args` inside your `console.log` function is a potential secret. It does this by comparing the `arguments` passed to `console.log` with the values of your current environment: `process.env`. It throws an error if any potential secret is found.
 
@@ -82,8 +82,8 @@ Contributions of any kind are welcome! See the [contributing guide](contributing
 ### Features
 
 - [ ] SecureLog via CDN.
-- [ ] AI to scan values passed to `console.log` and report potential sensitive logs.
+- [ ] AI will scan values passed to `console.log` and report potentially sensitive logs.
 
 # License
 
-See [LICENSE](LICENSE) © [Onboardbase](https://github.com/onboardbase/secure-log/blob/main/LICENSE)
+See [LICENSE](LICENSE)
