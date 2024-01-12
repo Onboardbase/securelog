@@ -11,7 +11,6 @@ A better and more secure console logging experience. Detects and prevents leakin
 - [Install](#install)
 - [Usage](#usage)
 - [Roadmap](#roadmap)
-- [Contributing](#contributing)
 
 ## Install
 
@@ -69,12 +68,6 @@ This will throw a warning if an actual `AWS_ACCESS_KEY_ID` is found in the `proc
 The SecureLog library currently only supports these console methods:
 
 - `console.log`, `console.clear`, `console.warn`, `console.profileEnd`, `console.debug`, `console.info`, `console.error`, `console.table`
-
-# Contributing
-
-Contributions of any kind are welcome! See the [contributing guide](contributing.md).
-
-[Thanks goes to these contributors](https://github.com/onboardbase/secure-log/graphs/contributors)!
 
 # Roadmap
 
