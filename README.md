@@ -12,7 +12,6 @@ A better and more secure console logging experience. Detects and prevents leakin
 - [Usage](#usage)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Install
 
