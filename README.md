@@ -83,7 +83,3 @@ Contributions of any kind are welcome! See the [contributing guide](contributing
 
 - [ ] SecureLog via CDN.
 - [ ] AI will scan values passed to `console.log` and report potentially sensitive logs.
-
-# License
-
-See [LICENSE](LICENSE)
