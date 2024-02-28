@@ -42,35 +42,6 @@ export default interface IOptions {
 }
 ```
 
-Example: In React App
-
-```html
-<head>
-  <script defer src="https://cdn.jsdelivr.net/npm/@onboardbase/secure-log/dist/index.min.js">
-    new SecureLog.default()
-  </script>
-</head>
-```
-
-Example: In NodeJs
-
-```js index.js
-const express = require('express')
-const app = express()
-const SecureLog = require('@onboardbase/secure-log')
-
-const port = 3000
-new SecureLog()
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
-```
-
 Example:
 
 ```js
@@ -91,6 +62,35 @@ console.log('secret', process.env.AWS_ACCESS_KEY_ID); // Onboardbase Signatures 
 ```
 
 This will throw a warning if an actual `AWS_ACCESS_KEY_ID` is found in the `process.env` to notify the user that they are logging a potential secret.
+
+Example: `React App`
+
+```html
+<head>
+  <script defer src="https://cdn.jsdelivr.net/npm/@onboardbase/secure-log/dist/index.min.js">
+    new SecureLog.default()
+  </script>
+</head>
+```
+
+Example: `NodeJs`
+
+```js index.js
+const express = require('express')
+const app = express()
+const SecureLog = require('@onboardbase/secure-log')
+
+const port = 3000
+new SecureLog()
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
+```
 
 ### Supported console methods
 
