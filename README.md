@@ -60,7 +60,7 @@ const app = express()
 const SecureLog = require('@onboardbase/secure-log')
 
 const port = 3000
-new SecureLog()a
+new SecureLog()
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
