@@ -102,5 +102,4 @@ The SecureLog library currently only supports these console methods:
 
 ### Features
 
-- [ ] SecureLog via CDN.
 - [ ] AI will scan values passed to `console.log` and report potentially sensitive logs.
