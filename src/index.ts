@@ -18,19 +18,27 @@ const getGlobalObject = () => {
 
 const LOG_PREFIX = 'Onboardbase Signatures here:';
 
-const checkForStringOccurences = (value: string, cachedConsole: Console) => {
+const checkForStringOccurences = (data: {
+  value: string;
+  cachedConsole: Console;
+  options?: IOptions;
+}) => {
+  const { value, cachedConsole, options } = data;
   if (value) {
     Object.keys(process.env).map(secretKey => {
-      const secretValue =(process.env || {})[secretKey]
-      const hasMatch = value.includes(secretValue)
+      const secretValue = (process.env || {})[secretKey];
+      const hasMatch = value.includes(secretValue);
 
       if (hasMatch) {
-
         cachedConsole.warn(
           `${secretValue} is present in "${value}" and is a valid secret value for the key: "${secretKey}"`
-            );
-          }
-    })
+        );
+
+        if (!options?.warnOnly) {
+          throw new Error('potential secret leak');
+        }
+      }
+    });
     /**
      * @todo
      * reimplement string interpolation
@@ -45,33 +53,48 @@ const isString = (value: any) => typeof value === 'string';
 const isObject = (value: any) => Object.keys(value).length;
 const isArray = (value: any) => Array.isArray(value);
 
-const checkForPotentialSecrets = (args: any[], cachedConsole: Console) => {
+const checkForPotentialSecrets = (data: {
+  args: any[];
+  cachedConsole: Console;
+  options?: IOptions;
+}) => {
+  const { args, cachedConsole, options } = data;
   try {
     args.map((argument: any) => {
       if (isString(argument)) {
-        return checkForStringOccurences(argument, cachedConsole);
+        return checkForStringOccurences({
+          value: argument,
+          cachedConsole,
+          options,
+        });
       }
 
       if (isObject(argument)) {
         const objectValue = Object.values(argument);
-        return checkForPotentialSecrets(objectValue, cachedConsole);
+        return checkForPotentialSecrets({ args: objectValue, cachedConsole });
       }
 
       if (isArray(argument)) {
         argument.map((arrayValue: any) => {
           if (isString(arrayValue)) {
-            return checkForPotentialSecrets(arrayValue, cachedConsole);
+            return checkForPotentialSecrets({
+              args: arrayValue,
+              cachedConsole,
+            });
           }
 
           if (isObject(arrayValue)) {
-            return checkForPotentialSecrets(
-              Object.values(arrayValue),
-              cachedConsole
-            );
+            return checkForPotentialSecrets({
+              args: Object.values(arrayValue),
+              cachedConsole,
+            });
           }
 
           if (isArray(arrayValue)) {
-            return checkForPotentialSecrets(arrayValue, cachedConsole);
+            return checkForPotentialSecrets({
+              args: arrayValue,
+              cachedConsole,
+            });
           }
         });
       }
@@ -81,6 +104,10 @@ const checkForPotentialSecrets = (args: any[], cachedConsole: Console) => {
   }
 };
 
+/**
+ * Represents a secure logging utility that wraps the console object.
+ * It provides additional functionality for logging and ensures that sensitive information is not accidentally logged.
+ */
 class SecureLog {
   cachedLog: Console;
   options: IOptions;
@@ -103,6 +130,13 @@ class SecureLog {
     globalObject.obbinitialized = true;
   }
 
+  /**
+   * Logs the provided arguments to the console, while checking for potential secrets.
+   * If the `disableConsoleOn` option is set and the current environment matches the value,
+   * the console logging will be disabled.
+   *
+   * @param args - The arguments to be logged.
+   */
   log(...args: any) {
     const disableConsole =
       this.options &&
@@ -112,7 +146,11 @@ class SecureLog {
     else {
       if (!isBrowser()) {
       }
-      checkForPotentialSecrets(args, this.cachedLog);
+      checkForPotentialSecrets({
+        args,
+        cachedConsole: this.cachedLog,
+        options: this.options,
+      });
       this.cachedLog.log.apply(console, [LOG_PREFIX, ...args]);
     }
   }
@@ -147,7 +185,7 @@ class SecureLog {
 
     if (disableConsole) return;
     else {
-      checkForPotentialSecrets(args, this.cachedLog);
+      checkForPotentialSecrets({ args, cachedConsole: this.cachedLog });
       this.cachedLog.debug.apply(console, [LOG_PREFIX, ...args]);
     }
   }
@@ -173,7 +211,10 @@ class SecureLog {
     if (disableConsole) return;
     else {
       if (!modArgs[1]?.skipValidationCheck) {
-        checkForPotentialSecrets(modArgs, this.cachedLog);
+        checkForPotentialSecrets({
+          args: modArgs,
+          cachedConsole: this.cachedLog,
+        });
       }
 
       const logValue = modArgs?.[1]?.skipValidationCheck
@@ -208,7 +249,7 @@ class SecureLog {
 
     if (disableConsole) return;
     else {
-      checkForPotentialSecrets(args, this.cachedLog);
+      checkForPotentialSecrets({ args, cachedConsole: this.cachedLog });
       this.cachedLog.info.apply(console, [LOG_PREFIX, ...args]);
     }
   }
@@ -254,7 +295,7 @@ class SecureLog {
     else {
       if (!isBrowser()) {
       }
-      checkForPotentialSecrets(args, this.cachedLog);
+      checkForPotentialSecrets({ args, cachedConsole: this.cachedLog });
       this.cachedLog.warn.apply(console, [LOG_PREFIX, ...args]);
     }
   }
