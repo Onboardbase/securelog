@@ -31,7 +31,7 @@ const checkForStringOccurences = (data: {
 
       if (hasMatch) {
         cachedConsole.warn(
-          `${secretValue} is present in "${value}" and is a valid secret value for the key: "${secretKey}"`
+          `the value of the secret: "${secretKey}", is being leaked!`
         );
 
         if (!options?.warnOnly) {
