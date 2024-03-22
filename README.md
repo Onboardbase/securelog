@@ -10,9 +10,13 @@ Check out other language support [Python](https://github.com/Onboardbase/secure-
 
 # Contents
 
-- [Install](#install)
-- [Usage](#usage)
+- [Secure log ](#secure-log-)
+- [Contents](#contents)
+  - [Install](#install)
+  - [Usage](#usage)
+    - [Supported console methods](#supported-console-methods)
 - [Roadmap](#roadmap)
+    - [Features](#features)
 
 ## Install
 
@@ -41,15 +45,18 @@ The SecureLog Library also accepts an object.
 export default interface IOptions {
   disableOn?: 'development' | 'production'; // You can use this to specify if you want the SecureLog library to be disabled in a specific environment
   disableConsoleOn?: 'development' | 'production'; // You can use this to disable the console entirely in a specific environment
+  warnOnly?: boolean; // If this is true, secure log will only print out a warning message rather than exit the program when it detects a secret leak. 
 }
 ```
 
 Example:
 
 ```js
-new SecureLog({ disableConsoleOn: 'development' }); // This will disable the SecureLog library on development environment.
+new SecureLog({ disableConsoleOn: 'development', warnOnly: true }); // This will disable the SecureLog library on development environment.
 console.log('sensitive secret here'); // This won't be executed.
 ```
+
+If a secret is detected in a log message, SecureLog can either issue a warning or **exit** the process, depending on the `warnOnly` option. The default value for `warnOnly` is `false`, hence SecureLog will exit the process when it detects a secret leak.
 
 The `disableConsoleOn` option passed to the `SecureLog` library will ensure that the `console.log` statement is not executed.
 
