@@ -1,11 +1,10 @@
-const Log = require('../dist');
+const Log = require('../dist/index');
 
 const mockedLog = jest.fn();
 const mockedError = jest.fn();
 const mockedWarn = jest.fn();
 
-const secrets = { PORT: "9200" }
-
+const secrets = { PORT: '9200' };
 
 const mockConsoleLog = () => {
   mockedLog.mockReset();
@@ -19,7 +18,7 @@ const mockConsoleLog = () => {
 let secureLog;
 const setup = (options = {}) => {
   mockConsoleLog();
-  process.env = secrets
+  process.env = secrets;
   secureLog = new Log.default(options);
 };
 
@@ -47,8 +46,7 @@ describe('Test console.log', () => {
   });
 
   it('should mask secrets when they are part of log', () => {
-    secureLog.log(`running on port ${secrets.PORT}`)
+    secureLog.log(`running on port ${secrets.PORT}`);
     // expect(mockedError).toHaveBeenCalledWith(`running on port ****`)
   });
-
 });

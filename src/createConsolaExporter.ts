@@ -7,8 +7,8 @@ export const createConsolaExporter = (options?: IOptions) => {
   return createConsola({
     reporters: [
       {
-        log: (...args: any) => {
-          secureLog.log(args);
+        log: (data: any) => {
+          secureLog.log(JSON.stringify(data));
         },
       },
     ],

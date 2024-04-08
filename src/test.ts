@@ -1,11 +1,14 @@
-import SecureLog from "./index";
+import SecureLog, { createConsolaExporter } from './index';
 
-const secrets = { PORT: "9200", NODE_ENV: "development" }
+const secrets = { PORT: '9200', NODE_ENV: 'development' };
 
-process.env = secrets
+process.env = secrets;
 
 const secureLog = new SecureLog();
 
-secureLog.log("hello 9200")
+const consola = createConsolaExporter();
+consola.log('Hello');
 
-console.log("error development")
+secureLog.log('hello 9200');
+
+console.log('error development');

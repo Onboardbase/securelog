@@ -19,7 +19,9 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "peerDependencies": {},
+  "peerDependencies": {
+    "consola": "^3.2.3"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -71,8 +73,5 @@
       "url": "https://github.com/Onboardbase/secure-log/blob/main/LICENSE"
     }
   ],
-  "homepage": "https://github.com/onboardbase/secure-log#readme",
-  "dependencies": {
-    "consola": "^3.2.3"
-  }
+  "homepage": "https://github.com/onboardbase/secure-log#readme"
 }

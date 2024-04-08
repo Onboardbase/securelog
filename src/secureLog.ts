@@ -27,7 +27,7 @@ const checkForStringOccurences = (data: {
   if (value) {
     Object.keys(process.env).map(secretKey => {
       const secretValue = (process.env || {})[secretKey];
-      const hasMatch = value.includes(secretValue);
+      const hasMatch = secretValue.length > 1 && value.includes(secretValue);
 
       if (hasMatch) {
         cachedConsole.warn(
