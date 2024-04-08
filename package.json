@@ -66,6 +66,13 @@
   "bugs": {
     "url": "https://github.com/onboardbase/secure-log/issues"
   },
-  "licenses": [{"url": "https://github.com/Onboardbase/secure-log/blob/main/LICENSE"}],
-  "homepage": "https://github.com/onboardbase/secure-log#readme"
+  "licenses": [
+    {
+      "url": "https://github.com/Onboardbase/secure-log/blob/main/LICENSE"
+    }
+  ],
+  "homepage": "https://github.com/onboardbase/secure-log#readme",
+  "dependencies": {
+    "consola": "^3.2.3"
+  }
 }
