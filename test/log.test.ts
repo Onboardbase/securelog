@@ -46,7 +46,7 @@ const cleanup = () => {
 describe('Test console.log', () => {
   beforeEach(() =>
     setup({
-      ignoreInitializedObject: true,
+      forceNewInstance: true,
       globalConsoleObject: console,
     })
   );

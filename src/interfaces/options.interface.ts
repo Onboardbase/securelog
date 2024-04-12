@@ -19,7 +19,11 @@ export default interface IOptions {
    */
   warnOnly?: boolean;
 
-  ignoreInitializedObject?: boolean;
+  forceNewInstance?: boolean;
+
+  maskLeakedSecrets?: boolean;
+
+  prefix?: string;
 
   globalConsoleObject?: Console;
 }

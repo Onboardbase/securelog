@@ -1,9 +1,16 @@
 import { createConsola } from 'consola';
 import IOptions from './interfaces/options.interface';
 import SecureLog from './secureLog';
+import { maskLeakedSecrets } from './utils/maskLeakedSecrets';
 
-export const createConsolaReporter = (options?: IOptions) => {
-  const secureLog = new SecureLog(options);
+export const createSecureConsolaReporter = (options?: IOptions) => {
+  const secureLog = new SecureLog({
+    warnOnly: true,
+    forceNewInstance: true,
+    maskLeakedSecrets: true,
+    prefix: '',
+    ...options,
+  });
   return createConsola({
     reporters: [
       {

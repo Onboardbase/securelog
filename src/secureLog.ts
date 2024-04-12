@@ -1,113 +1,12 @@
 import IOptions from './interfaces/options.interface';
-
-const isBrowser = () => {
-  try {
-    return window && window?.navigator && !global.process;
-  } catch (error) {
-    return false;
-  }
-};
-
-const getGlobalConsoleObject = () => {
-  return isBrowser() ? window.console : global.console;
-};
-
-
-const setGlobalConsoleObject = (obj: Console) => {
-  return isBrowser() ? (window.console = obj) : (global.console = obj);
-};
-
-const getGlobalObject = () => {
-  return isBrowser() ? window : global;
-};
-
-const LOG_PREFIX = 'Onboardbase Signatures here:';
-
-const checkForStringOccurences = (data: {
-  value: string;
-  cachedConsole: Console;
-  options?: IOptions;
-}) => {
-  const { value, cachedConsole, options } = data;
-  if (value) {
-    Object.keys(process.env).map(secretKey => {
-      const secretValue = (process.env || {})[secretKey];
-      const hasMatch = secretValue.length > 1 && value.includes(secretValue);
-
-      if (hasMatch) {
-        cachedConsole.warn(
-          `the value of the secret: "${secretKey}", is being leaked!`
-        );
-
-        if (!options?.warnOnly) {
-          throw new Error('potential secret leak');
-        }
-      }
-    });
-    /**
-     * @todo
-     * reimplement string interpolation
-     */
-    // else if (secretValues.some(secret => value.includes(secret))) {
-    //   cachedConsole.error(`${value} contains some secret value`);
-    // }
-  }
-};
-
-const isString = (value: any) => typeof value === 'string';
-const isObject = (value: any) => Object.keys(value).length;
-const isArray = (value: any) => Array.isArray(value);
-
-const checkForPotentialSecrets = (data: {
-  args: any[];
-  cachedConsole: Console;
-  options?: IOptions;
-}) => {
-  const { args, cachedConsole, options } = data;
-  try {
-    args.map((argument: any) => {
-      if (isString(argument)) {
-        return checkForStringOccurences({
-          value: argument,
-          cachedConsole,
-          options,
-        });
-      }
-
-      if (isObject(argument)) {
-        const objectValue = Object.values(argument);
-        return checkForPotentialSecrets({ args: objectValue, cachedConsole });
-      }
-
-      if (isArray(argument)) {
-        argument.map((arrayValue: any) => {
-          if (isString(arrayValue)) {
-            return checkForPotentialSecrets({
-              args: arrayValue,
-              cachedConsole,
-            });
-          }
-
-          if (isObject(arrayValue)) {
-            return checkForPotentialSecrets({
-              args: Object.values(arrayValue),
-              cachedConsole,
-            });
-          }
-
-          if (isArray(arrayValue)) {
-            return checkForPotentialSecrets({
-              args: arrayValue,
-              cachedConsole,
-            });
-          }
-        });
-      }
-    });
-  } catch (error) {
-    cachedConsole.error(error, { skipValidationCheck: true });
-  }
-};
+import { maskSecretLeaks } from './maskLeakedSecret';
+import {
+  getGlobalConsoleObject,
+  getGlobalObject,
+  setGlobalConsoleObject,
+} from './utils';
+import { checkForPotentialSecrets } from './utils/checkForPotentialSecrets';
+import { handleSecretLeakResult } from './utils/handleSecretLeakResult';
 
 /**
  * Represents a secure logging utility that wraps the console object.
@@ -115,23 +14,37 @@ const checkForPotentialSecrets = (data: {
  */
 class SecureLog {
   cachedLog: Console;
+  disabled: boolean;
+  Console: console.ConsoleConstructor;
 
-  constructor(private options?: IOptions) {
-    this.options = options;
-    if (
-      options &&
-      options?.disableOn &&
-      process.env.NODE_ENV === options?.disableOn
-    )
-      return;
+  PREFIX = 'Onboardbase Signatures here:';
+
+  constructor(private options: IOptions = {}) {
+    this.disabled = process.env.NODE_ENV === options?.disableOn;
+    if (this.disabled) return;
 
     const globalObject: any = getGlobalObject();
-    if (globalObject.obbinitialized && !options.ignoreInitializedObject) {
+    if (options?.forceNewInstance) {
+      // reset the global console to standard console object
+      globalObject.console = globalObject.obbinitialized
+        ? globalObject.console.cachedLog
+        : console;
+    } else if (globalObject.obbinitialized) {
       return globalObject.console as SecureLog;
     }
     this.cachedLog = getGlobalConsoleObject();
+    this.PREFIX = this.options.prefix ?? this.PREFIX;
     globalObject.console = this;
     globalObject.obbinitialized = true;
+  }
+
+  useActualConsole() {
+    setGlobalConsoleObject(this.cachedLog);
+  }
+
+  hasSecretLeak(...args: any) {
+    const checkResult = checkForPotentialSecrets(args);
+    return !!checkResult?.length;
   }
 
   /**
@@ -142,25 +55,15 @@ class SecureLog {
    * @param args - The arguments to be logged.
    */
   log(...args: any) {
-    const disableConsole =
-      this.options &&
-      this.options.disableConsoleOn &&
-      process.env.NODE_ENV === this.options?.disableConsoleOn;
-    if (disableConsole) return;
-    else {
-      if (!isBrowser()) {
-      }
-      checkForPotentialSecrets({
-        args,
-        cachedConsole: this.cachedLog,
-        options: this.options,
-      });
-      this.cachedLog.log.apply(console, [LOG_PREFIX, ...args]);
-    }
-  }
+    if (this.disabled) return;
 
-  useActualConsole() {
-    setGlobalConsoleObject(this.cachedLog);
+    const checkResult = checkForPotentialSecrets(args);
+    handleSecretLeakResult(checkResult, this.cachedLog, this.options);
+    const valuesIn = checkResult.map((key: string) => process.env[key]);
+    const data = this.options.maskLeakedSecrets
+      ? maskSecretLeaks(args, valuesIn)
+      : args;
+    this.cachedLog.log.apply(console, [this.PREFIX, ...data]);
   }
 
   clear() {
@@ -173,29 +76,64 @@ class SecureLog {
     this.cachedLog.assert.apply(null, args);
   }
 
-  count(label?: string): void;
-  count(label?: string): void;
-  count(label?: unknown): void {
-    throw new Error('Method not implemented.');
-  }
-  countReset(label?: string): void;
-  countReset(label?: string): void;
-  countReset(label?: unknown): void {
-    throw new Error('Method not implemented.');
-  }
   debug(...data: any[]): void;
   debug(message?: any, ...optionalParams: any[]): void;
   debug(...args: any): void {
-    const disableConsole =
-      this.options &&
-      this.options.disableConsoleOn &&
-      process.env.NODE_ENV === this.options?.disableConsoleOn;
+    if (this.disabled) return;
 
-    if (disableConsole) return;
-    else {
-      checkForPotentialSecrets({ args, cachedConsole: this.cachedLog });
-      this.cachedLog.debug.apply(console, [LOG_PREFIX, ...args]);
+    const checkResult = checkForPotentialSecrets(args);
+    handleSecretLeakResult(checkResult, this.cachedLog);
+    const valuesIn = checkResult.map((key: string) => process.env[key]);
+    const data = this.options.maskLeakedSecrets
+      ? maskSecretLeaks(args, valuesIn)
+      : args;
+    this.cachedLog.debug.apply(console, [this.PREFIX, ...data]);
+  }
+  error(...data: any[]): void;
+  error(message?: any, ...optionalParams: any[]): void;
+  error(...args: any): void {
+    const modArgs = args || [];
+
+    if (this.disabled) return;
+
+    if (!modArgs[1]?.skipValidationCheck) {
+      const checkResult = checkForPotentialSecrets(args);
+      handleSecretLeakResult(checkResult, this.cachedLog, this.options);
     }
+
+    const logValue = modArgs?.[1]?.skipValidationCheck
+      ? [this.PREFIX, modArgs?.[0]]
+      : [this.PREFIX, ...modArgs];
+
+    this.cachedLog.error.apply(console, logValue);
+  }
+  profile(label?: string): void {
+    return this.cachedLog.profile(label);
+  }
+  profileEnd(label?: string): void {
+    return this.cachedLog.profileEnd.bind(null, label);
+  }
+  info(...data: any[]): void;
+  info(message?: any, ...optionalParams: any[]): void;
+  info(...args: any): void {
+    if (this.disabled) return;
+
+    const checkResult = checkForPotentialSecrets(args);
+    handleSecretLeakResult(checkResult, this.cachedLog, this.options);
+    this.cachedLog.info.apply(console, [this.PREFIX, ...args]);
+  }
+  warn(...data: any[]): void;
+  warn(message?: any, ...optionalParams: any[]): void;
+  warn(...args: any): void {
+    if (this.disabled) return;
+
+    const checkResult = checkForPotentialSecrets(args);
+    handleSecretLeakResult(checkResult, this.cachedLog, this.options);
+    const valuesIn = checkResult.map((key: string) => process.env[key]);
+    const data = this.options.maskLeakedSecrets
+      ? maskSecretLeaks(args, valuesIn)
+      : args;
+    this.cachedLog.warn.apply(console, [this.PREFIX, ...data]);
   }
   dir(item?: any, options?: any): void;
   dir(obj: any): void;
@@ -207,30 +145,15 @@ class SecureLog {
   dirxml(...data: unknown[]): void {
     throw new Error('Method not implemented.');
   }
-  error(...data: any[]): void;
-  error(message?: any, ...optionalParams: any[]): void;
-  error(...args: any): void {
-    const modArgs = args || [];
-    const disableConsole =
-      this.options &&
-      this.options.disableConsoleOn &&
-      process.env.NODE_ENV === this.options?.disableConsoleOn;
-
-    if (disableConsole) return;
-    else {
-      if (!modArgs[1]?.skipValidationCheck) {
-        checkForPotentialSecrets({
-          args: modArgs,
-          cachedConsole: this.cachedLog,
-        });
-      }
-
-      const logValue = modArgs?.[1]?.skipValidationCheck
-        ? [LOG_PREFIX, modArgs?.[0]]
-        : [LOG_PREFIX, ...modArgs];
-
-      this.cachedLog.error.apply(console, logValue);
-    }
+  count(label?: string): void;
+  count(label?: string): void;
+  count(label?: unknown): void {
+    throw new Error('Method not implemented.');
+  }
+  countReset(label?: string): void;
+  countReset(label?: string): void;
+  countReset(label?: unknown): void {
+    throw new Error('Method not implemented.');
   }
   group(...data: any[]): void;
   group(...label: any[]): void;
@@ -245,22 +168,9 @@ class SecureLog {
   groupEnd(): void;
   groupEnd(): void;
   groupEnd(): void {
-    throw new Error('Method not implemented.');
-  }
-  info(...data: any[]): void;
-  info(message?: any, ...optionalParams: any[]): void;
-  info(...args: any): void {
-    const disableConsole =
-      this.options &&
-      this.options.disableConsoleOn &&
-      process.env.NODE_ENV === this.options?.disableConsoleOn;
+                     throw new Error('Method not implemented.');
+                   }
 
-    if (disableConsole) return;
-    else {
-      checkForPotentialSecrets({ args, cachedConsole: this.cachedLog });
-      this.cachedLog.info.apply(console, [LOG_PREFIX, ...args]);
-    }
-  }
   table(tabularData?: any, properties?: string[]): void;
   table(tabularData: any, properties?: readonly string[]): void;
   table(...args: any): void {
@@ -289,31 +199,10 @@ class SecureLog {
   trace(...data: any[]): void;
   trace(message?: any, ...optionalParams: any[]): void;
   trace(message?: unknown, ...optionalParams: unknown[]): void {
-    throw new Error('Method not implemented.');
-  }
-  warn(...data: any[]): void;
-  warn(message?: any, ...optionalParams: any[]): void;
-  warn(...args: any): void {
-    const disableConsole =
-      this.options &&
-      this.options.disableConsoleOn &&
-      process.env.NODE_ENV === this.options?.disableConsoleOn;
-
-    if (disableConsole) return;
-    else {
-      if (!isBrowser()) {
-      }
-      checkForPotentialSecrets({ args, cachedConsole: this.cachedLog });
-      this.cachedLog.warn.apply(console, [LOG_PREFIX, ...args]);
-    }
-  }
-  Console: console.ConsoleConstructor;
-  profile(label?: string): void {
-    return this.cachedLog.profile(label);
-  }
-  profileEnd(label?: string): void {
-    return this.cachedLog.profileEnd.bind(null, label);
-  }
+                                                                 throw new Error(
+                                                                   'Method not implemented.'
+                                                                 );
+                                                               }
 }
 
 export default SecureLog;

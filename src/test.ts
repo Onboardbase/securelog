@@ -1,4 +1,4 @@
-import SecureLog, { createConsolaReporter } from './index';
+import SecureLog, { createSecureConsolaReporter } from './index';
 
 const secrets = { PORT: '9200', NODE_ENV: 'development' };
 
@@ -10,5 +10,5 @@ secureLog.log('hello 9200');
 
 console.log('error development');
 
-const consola = createConsolaReporter();
+const consola = createSecureConsolaReporter();
 consola.log('Hello');
