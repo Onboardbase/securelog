@@ -40,7 +40,6 @@ const setup = (options: IOptions = {}) => {
 const cleanup = () => {
   secureLog.useActualConsole();
   Object.assign(process.env, actualProcessEnv);
-  console.log('Cleaned up Mocks');
 };
 
 describe('Test console.log', () => {
@@ -52,7 +51,7 @@ describe('Test console.log', () => {
   );
   afterEach(() => cleanup());
 
-  it('should have called console.log with hello', () => {
+  it('should have called standard console.log with hello', () => {
     secureLog.log('hello');
     expect(mockObj.log).toHaveBeenCalledWith(
       'Onboardbase Signatures here:',

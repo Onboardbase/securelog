@@ -20,7 +20,8 @@ class SecureLog {
   PREFIX = 'Onboardbase Signatures here:';
 
   constructor(private options: IOptions = {}) {
-    this.disabled = process.env.NODE_ENV === options?.disableOn;
+    this.disabled =
+      options?.disableOn && process.env.NODE_ENV === options?.disableOn;
     if (this.disabled) return;
 
     const globalObject: any = getGlobalObject();
@@ -35,12 +36,12 @@ class SecureLog {
     this.cachedLog = getGlobalConsoleObject();
     this.PREFIX = this.options.prefix ?? this.PREFIX;
     globalObject.console = this;
-    globalObject.obbinitialized = true;
+    globalObject.obbinitialized = false;
   }
 
   useActualConsole() {
-    setGlobalConsoleObject(this.cachedLog);
-  }
+                       // setGlobalConsoleObject(this.cachedLog);
+                     }
 
   hasSecretLeak(...args: any) {
     const checkResult = checkForPotentialSecrets(args);
@@ -168,8 +169,8 @@ class SecureLog {
   groupEnd(): void;
   groupEnd(): void;
   groupEnd(): void {
-                     throw new Error('Method not implemented.');
-                   }
+    throw new Error('Method not implemented.');
+  }
 
   table(tabularData?: any, properties?: string[]): void;
   table(tabularData: any, properties?: readonly string[]): void;
@@ -199,10 +200,8 @@ class SecureLog {
   trace(...data: any[]): void;
   trace(message?: any, ...optionalParams: any[]): void;
   trace(message?: unknown, ...optionalParams: unknown[]): void {
-                                                                 throw new Error(
-                                                                   'Method not implemented.'
-                                                                 );
-                                                               }
+    throw new Error('Method not implemented.');
+  }
 }
 
 export default SecureLog;
