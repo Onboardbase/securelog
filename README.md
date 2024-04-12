@@ -52,7 +52,10 @@ export default interface IOptions {
   disableOn?: 'development' | 'production'; // You can use this to specify if you want the SecureLog library to be disabled in a specific environment
   disableConsoleOn?: 'development' | 'production'; // You can use this to disable the console entirely in a specific environment
   warnOnly?: boolean; // If this is true, secure log will only print out a warning message rather than exit the program when it detects a secret leak.
-  
+  forceNewInstance?: boolean; // SecureLog maintains a singleton, use this option to refresh the singleton and updating the config in the process.
+  maskLeakedSecrets?: boolean; // Hide the value of a leaked secrets from reaching the console
+  prefix:? string; // customize the prefix for the logs. defaults to "Onboardbase Signatures here:"
+  globalConsoleObject:? Console // SecureLog advertently uses the standard console.log to output to the console, this option enables configuring the standard console object that is used within the library to output to the console.
 }
 ```
 ---
