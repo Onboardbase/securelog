@@ -18,4 +18,8 @@ export default interface IOptions {
    * Specifies whether to only log warnings instead of throwing errors.
    */
   warnOnly?: boolean;
+
+  ignoreInitializedObject?: boolean;
+
+  globalConsoleObject?: Console;
 }

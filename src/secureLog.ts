@@ -12,6 +12,11 @@ const getGlobalConsoleObject = () => {
   return isBrowser() ? window.console : global.console;
 };
 
+
+const setGlobalConsoleObject = (obj: Console) => {
+  return isBrowser() ? (window.console = obj) : (global.console = obj);
+};
+
 const getGlobalObject = () => {
   return isBrowser() ? window : global;
 };
@@ -110,9 +115,8 @@ const checkForPotentialSecrets = (data: {
  */
 class SecureLog {
   cachedLog: Console;
-  options: IOptions;
 
-  constructor(options?: IOptions) {
+  constructor(private options?: IOptions) {
     this.options = options;
     if (
       options &&
@@ -122,7 +126,7 @@ class SecureLog {
       return;
 
     const globalObject: any = getGlobalObject();
-    if (globalObject.obbinitialized) {
+    if (globalObject.obbinitialized && !options.ignoreInitializedObject) {
       return globalObject.console as SecureLog;
     }
     this.cachedLog = getGlobalConsoleObject();
@@ -153,6 +157,10 @@ class SecureLog {
       });
       this.cachedLog.log.apply(console, [LOG_PREFIX, ...args]);
     }
+  }
+
+  useActualConsole() {
+    setGlobalConsoleObject(this.cachedLog);
   }
 
   clear() {

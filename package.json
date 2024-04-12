@@ -6,7 +6,7 @@
   "files": [
     "dist"
   ],
-  "jest": {},
+  "type": "commonjs",
   "engines": {
     "node": ">=10"
   },
@@ -16,7 +16,7 @@
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
-    "size": "npm run build && size-limit",
+    "size": "size-limit",
     "analyze": "size-limit --why"
   },
   "peerDependencies": {},
