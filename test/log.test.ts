@@ -1,7 +1,6 @@
 import IOptions from '../src/interfaces/options.interface';
 import SecureLog from '../src/secureLog';
 
-const actualConsole = Object.assign({ isActual: true }, console);
 const actualProcessEnv = Object.assign({}, process.env);
 
 const mockMethodNames = ['log', 'warn', 'error'] as const;
@@ -15,13 +14,6 @@ const mockObj: {
 
 const resetMocks = () => {
   mockMethodNames.forEach(methodName => mockObj[methodName]?.mockReset());
-};
-
-const cleanupMocks = () => {
-  mockMethodNames.forEach(methodName => {
-    const actualMethod = actualConsole[methodName];
-    console[methodName] = actualMethod ?? console[methodName];
-  });
 };
 
 const mockConsoleMethods = () => {
