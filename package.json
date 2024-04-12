@@ -6,11 +6,7 @@
   "files": [
     "dist"
   ],
-  "jest": {
-    "moduleNameMapper": {
-      "(.+)\\.js": "$1"
-    }
-  },
+  "jest": {},
   "engines": {
     "node": ">=10"
   },
@@ -20,7 +16,7 @@
     "test": "tsdx test",
     "lint": "tsdx lint",
     "prepare": "tsdx build",
-    "size": "size-limit",
+    "size": "npm run build && size-limit",
     "analyze": "size-limit --why"
   },
   "peerDependencies": {},
@@ -44,11 +40,13 @@
   "size-limit": [
     {
       "path": "dist/secure-log.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "10 KB",
+      "ignore": ["consola"]
     },
     {
       "path": "dist/secure-log.esm.js",
-      "limit": "10 KB"
+      "limit": "10 KB",
+      "ignore": ["consola"]
     }
   ],
   "devDependencies": {
