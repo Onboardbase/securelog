@@ -1,6 +1,4 @@
-// import { createConsolaReporter } from '../src/createConsolaExporter';
-import { consola } from 'consola';
-import { createConsolaReporter } from '../dist/secure-log.cjs.production.min';
+import { createConsolaReporter } from '../src/createConsolaExporter';
 
 describe('Test console.log', () => {
   it('should create a consola reporter', () => {
