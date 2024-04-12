@@ -6,7 +6,11 @@
   "files": [
     "dist"
   ],
-  "jest": {},
+  "jest": {
+    "moduleNameMapper": {
+      "(.+)\\.js": "$1"
+    }
+  },
   "engines": {
     "node": ">=10"
   },
@@ -19,9 +23,7 @@
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
-  "peerDependencies": {
-    "consola": "^3.2.3"
-  },
+  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"
@@ -53,6 +55,7 @@
     "@size-limit/esbuild": "^8.2.6",
     "@size-limit/esbuild-why": "^8.2.6",
     "@size-limit/preset-small-lib": "^8.2.6",
+    "@types/node": "^20.12.7",
     "husky": "^8.0.3",
     "size-limit": "^8.2.6",
     "tsdx": "^0.14.1",
@@ -73,5 +76,8 @@
       "url": "https://github.com/Onboardbase/secure-log/blob/main/LICENSE"
     }
   ],
-  "homepage": "https://github.com/onboardbase/secure-log#readme"
+  "homepage": "https://github.com/onboardbase/secure-log#readme",
+  "dependencies": {
+    "consola": "^3.2.3"
+  }
 }

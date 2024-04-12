@@ -1,10 +1,10 @@
-import { createConsola } from 'consola';
+import consola from 'consola';
 import IOptions from './interfaces/options.interface';
 import SecureLog from './secureLog';
 
 export const createConsolaExporter = (options?: IOptions) => {
   const secureLog = new SecureLog(options);
-  return createConsola({
+  return consola.create({
     reporters: [
       {
         log: (data: any) => {
