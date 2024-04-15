@@ -16,12 +16,10 @@ Check out other language support [Python](https://github.com/Onboardbase/secure-
   - [Install](#install)
   - [Usage](#usage)
     - [Supported console methods](#supported-console-methods)
-- [Roadmap](#roadmap)
-    - [Features](#features)
 
 ## Install
 
-To use `log`,
+To use `SecureLog`,
 
 ---
 ```bash
@@ -178,10 +176,3 @@ process.env = secrets;
 
 console.log(validateSecretLeak("development")) // true
 ```
-
-
-# Roadmap
-
-### Features
-
-- [ ] AI will scan values passed to `console.log` and report potentially sensitive logs.
