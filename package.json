@@ -1,12 +1,12 @@
 {
-  "version": "2.0.0",
+  "version": "3.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
   ],
-  "jest": {},
+  "type": "commonjs",
   "engines": {
     "node": ">=10"
   },
@@ -40,17 +40,24 @@
   "size-limit": [
     {
       "path": "dist/secure-log.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "10 KB",
+      "ignore": [
+        "consola"
+      ]
     },
     {
       "path": "dist/secure-log.esm.js",
-      "limit": "10 KB"
+      "limit": "10 KB",
+      "ignore": [
+        "consola"
+      ]
     }
   ],
   "devDependencies": {
     "@size-limit/esbuild": "^8.2.6",
     "@size-limit/esbuild-why": "^8.2.6",
     "@size-limit/preset-small-lib": "^8.2.6",
+    "@types/node": "^20.12.7",
     "husky": "^8.0.3",
     "size-limit": "^8.2.6",
     "tsdx": "^0.14.1",
@@ -66,6 +73,16 @@
   "bugs": {
     "url": "https://github.com/onboardbase/secure-log/issues"
   },
-  "licenses": [{"url": "https://github.com/Onboardbase/secure-log/blob/main/LICENSE"}],
-  "homepage": "https://github.com/onboardbase/secure-log#readme"
+  "licenses": [
+    {
+      "url": "https://github.com/Onboardbase/secure-log/blob/main/LICENSE"
+    }
+  ],
+  "homepage": "https://github.com/onboardbase/secure-log#readme",
+  "dependencies": {
+    "consola": "^3.2.3",
+    "mask-sensitive-data": "^0.11.5",
+    "node": "^18.20.2",
+    "npm": "^10.5.2"
+  }
 }

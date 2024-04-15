@@ -18,4 +18,12 @@ export default interface IOptions {
    * Specifies whether to only log warnings instead of throwing errors.
    */
   warnOnly?: boolean;
+
+  forceNewInstance?: boolean;
+
+  maskLeakedSecrets?: boolean;
+
+  prefix?: string;
+
+  globalConsoleObject?: Console;
 }

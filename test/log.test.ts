@@ -1,36 +1,59 @@
-const Log = require('../dist');
+import IOptions from '../src/interfaces/options.interface';
+import SecureLog from '../src/secureLog';
 
-const mockedLog = jest.fn();
-const mockedError = jest.fn();
-const mockedWarn = jest.fn();
+const actualProcessEnv = Object.assign({}, process.env);
 
-const secrets = { PORT: "9200" }
+const mockMethodNames = ['log', 'warn', 'error'] as const;
 
+const mockObj: {
+  [K in typeof mockMethodNames[number]]?: jest.Mock | any;
+} = mockMethodNames.reduce(
+  (accObj, key) => ({ ...accObj, [key]: jest.fn() }),
+  {}
+);
 
-const mockConsoleLog = () => {
-  mockedLog.mockReset();
-  mockedWarn.mockReset();
-  mockedError.mockReset();
-  console.log = mockedLog;
-  console.warn = mockedWarn;
-  console.error = mockedError;
+const resetMocks = () => {
+  mockMethodNames.forEach(methodName => mockObj[methodName]?.mockReset());
 };
 
-let secureLog;
-const setup = (options = {}) => {
-  mockConsoleLog();
-  process.env = secrets
-  secureLog = new Log.default(options);
+const mockConsoleMethods = () => {
+  mockMethodNames.forEach(methodName => {
+    const mockedMethod = mockObj[methodName];
+    console[methodName] = mockedMethod ?? console[methodName];
+  });
+};
+
+const secrets = { PORT: '9200' };
+
+const setupConsoleMocks = () => {
+  resetMocks();
+  mockConsoleMethods();
+};
+
+let secureLog: SecureLog;
+const setup = (options: IOptions = {}) => {
+  setupConsoleMocks();
+  process.env = secrets;
+  secureLog = new SecureLog(options);
+};
+
+const cleanup = () => {
+  secureLog.useActualConsole();
+  Object.assign(process.env, actualProcessEnv);
 };
 
 describe('Test console.log', () => {
-  beforeEach(() => {
-    setup();
-  });
-  it('should have called console.log with hello', () => {
-    secureLog.log('hello');
+  beforeEach(() =>
+    setup({
+      forceNewInstance: true,
+      globalConsoleObject: console,
+    })
+  );
+  afterEach(() => cleanup());
 
-    expect(mockedLog).toHaveBeenCalledWith(
+  it('should have called standard console.log with hello', () => {
+    secureLog.log('hello');
+    expect(mockObj.log).toHaveBeenCalledWith(
       'Onboardbase Signatures here:',
       'hello'
     );
@@ -38,17 +61,24 @@ describe('Test console.log', () => {
 
   it('should have called console.warn with hello warn', () => {
     secureLog.warn('hello warn');
-    expect(mockedWarn).toHaveBeenCalledWith('hello warn');
+    expect(mockObj.warn).toHaveBeenCalledWith(
+      'Onboardbase Signatures here:',
+      'hello warn'
+    );
   });
 
   it('should have called console.error with hello error', () => {
     secureLog.error('hello error');
-    expect(mockedError).toHaveBeenCalledWith('hello error');
+    expect(mockObj.error).toHaveBeenCalledWith(
+      'Onboardbase Signatures here:',
+      'hello error'
+    );
   });
 
   it('should mask secrets when they are part of log', () => {
-    secureLog.log(`running on port ${secrets.PORT}`)
-    // expect(mockedError).toHaveBeenCalledWith(`running on port ****`)
+    secureLog.log(`running on port ${secrets.PORT}`);
+    expect(mockObj.warn).toHaveBeenCalledWith(
+      'the value of the secret: "PORT", is being leaked!'
+    );
   });
-
 });
