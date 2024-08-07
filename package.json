@@ -31,22 +31,22 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "securelog",
+  "name": "securelogs",
   "author": "Onboardbase",
   "publishConfig": {
     "access": "public"
   },
-  "module": "dist/securelog.esm.js",
+  "module": "dist/securelogs.esm.js",
   "size-limit": [
     {
-      "path": "dist/securelog.cjs.production.min.js",
+      "path": "dist/securelogs.cjs.production.min.js",
       "limit": "10 KB",
       "ignore": [
         "consola"
       ]
     },
     {
-      "path": "dist/securelog.esm.js",
+      "path": "dist/securelogs.esm.js",
       "limit": "10 KB",
       "ignore": [
         "consola"
