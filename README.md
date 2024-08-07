@@ -33,7 +33,7 @@ Import the SecureLog library at the top level of your project. If you use any en
 
 ---
 ```js
-import SecureLog from 'securelog';
+import SecureLog from 'securelogs';
 new SecureLog(); // For JS projects, use new SecureLog.default()
 
 console.log('random value'); // Onboardbase Signatures here: random value.
@@ -90,7 +90,7 @@ Example: `React App`
 ---
 ```html
 <head>
-  <script defer src="https://cdn.jsdelivr.net/npm/securelog/dist/index.min.js">
+  <script defer src="https://cdn.jsdelivr.net/npm/securelogs/dist/index.min.js">
     new SecureLog.default()
   </script>
 </head>
@@ -103,7 +103,7 @@ Example: `NodeJs`
 ```js
 const express = require('express')
 const app = express()
-const SecureLog = require('securelog')
+const SecureLog = require('securelogs')
 
 const port = 3000
 new SecureLog()
@@ -132,7 +132,7 @@ To securely log with [consola](https://github.com/unjs/consola), use the `create
 It exposes a secure log instance with the following config: `{ warnOnly: true, forceNewInstance: true, maskLeakedSecrets: true, }`
 
 ```ts
-import { createSecureConsolaReporter } from "secure-log"
+import { createSecureConsolaReporter } from "securelogs"
 const options: IOptions = {} // override the default config used to initialize secure log instance
 const consola = createSecureConsolaReporter(options)
 process.env.NODE_ENV = "development"
@@ -144,7 +144,7 @@ consola.log("hello there from development") // {"date":"2024-04-12T17:46:07.099Z
 Mask leaked secrets in a string|array|object.
 
 ```ts
-import { maskSecretLeaks } from "securelog"
+import { maskSecretLeaks } from "securelogs"
 
 // mask secrets existing in a predefined array of values
 const valuesIn = ['asd']
@@ -168,7 +168,7 @@ console.log(maskSecretLeaks({ nested: { env: 'development' } }));
 ### validateSecretLeak(data: any): boolean
 Validate if a string|object|array contains secrets
 ```ts
-import { validateSecretLeak } from "securelog"
+import { validateSecretLeak } from "securelogs"
 
 const secrets = { PORT: '9200', NODE_ENV: 'development' };
 
