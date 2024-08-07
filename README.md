@@ -23,7 +23,7 @@ To use `SecureLog`,
 
 ---
 ```bash
-yarn add securelog # npm i securelog
+yarn add securelogs # npm i securelogs
 ```
 ---
 
