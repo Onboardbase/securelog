@@ -31,7 +31,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@onboardbase/secure-log",
+  "name": "secure-log",
   "author": "Onboardbase",
   "publishConfig": {
     "access": "public"
