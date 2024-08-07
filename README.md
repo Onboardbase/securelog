@@ -23,7 +23,7 @@ To use `SecureLog`,
 
 ---
 ```bash
-yarn add secure-log # npm i secure-log
+yarn add securelog # npm i securelog
 ```
 ---
 
@@ -33,7 +33,7 @@ Import the SecureLog library at the top level of your project. If you use any en
 
 ---
 ```js
-import SecureLog from 'secure-log';
+import SecureLog from 'securelog';
 new SecureLog(); // For JS projects, use new SecureLog.default()
 
 console.log('random value'); // Onboardbase Signatures here: random value.
@@ -90,7 +90,7 @@ Example: `React App`
 ---
 ```html
 <head>
-  <script defer src="https://cdn.jsdelivr.net/npm/secure-log/dist/index.min.js">
+  <script defer src="https://cdn.jsdelivr.net/npm/securelog/dist/index.min.js">
     new SecureLog.default()
   </script>
 </head>
@@ -103,7 +103,7 @@ Example: `NodeJs`
 ```js
 const express = require('express')
 const app = express()
-const SecureLog = require('secure-log')
+const SecureLog = require('securelog')
 
 const port = 3000
 new SecureLog()
@@ -144,7 +144,7 @@ consola.log("hello there from development") // {"date":"2024-04-12T17:46:07.099Z
 Mask leaked secrets in a string|array|object.
 
 ```ts
-import { maskSecretLeaks } from "secure-log"
+import { maskSecretLeaks } from "securelog"
 
 // mask secrets existing in a predefined array of values
 const valuesIn = ['asd']
@@ -168,7 +168,7 @@ console.log(maskSecretLeaks({ nested: { env: 'development' } }));
 ### validateSecretLeak(data: any): boolean
 Validate if a string|object|array contains secrets
 ```ts
-import { validateSecretLeak } from "secure-log"
+import { validateSecretLeak } from "securelog"
 
 const secrets = { PORT: '9200', NODE_ENV: 'development' };
 
