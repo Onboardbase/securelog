@@ -5,7 +5,7 @@
 
 A better and more secure console logging experience. Detects and prevents leaking secrets and API tokens into your logs.
 
-Check out other language support [Python](https://github.com/Onboardbase/secure-log-py) and [Scanner](https://github.com/Onboardbase/securelog-scan)
+Check out other language support [Python](https://github.com/Onboardbase/secure-log-py) and [Scan](https://github.com/Onboardbase/securelog-scan)
 
 </div>
 
