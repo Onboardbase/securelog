@@ -1,7 +1,7 @@
 
 <div align=“center”>
 
-# Securelog [![Release](https://github.com/onboardbase/secure-log/actions/workflows/main.yml/badge.svg)](https://github.com/onboardbase/secure-log/actions/workflows/main.yml)[![Lint](https://github.com/onboardbase/secure-log/actions/workflows/main.yml/badge.svg)](https://github.com/onboardbase/secure-log/actions/workflows/main.yml)
+# Securelog logs [![Release](https://github.com/onboardbase/secure-log/actions/workflows/main.yml/badge.svg)](https://github.com/onboardbase/secure-log/actions/workflows/main.yml)[![Lint](https://github.com/onboardbase/secure-log/actions/workflows/main.yml/badge.svg)](https://github.com/onboardbase/secure-log/actions/workflows/main.yml)
 
 A better and more secure console logging experience. Detects and prevents leaking secrets and API tokens into your logs.
 
@@ -11,8 +11,6 @@ Check out [Securelog for scan](https://github.com/Onboardbase/securelog-scan) an
 
 # Contents
 
-- [Secure log ](#secure-log-)
-- [Contents](#contents)
   - [Install](#install)
   - [Usage](#usage)
     - [Supported console methods](#supported-console-methods)
