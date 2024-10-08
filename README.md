@@ -5,7 +5,9 @@
 
 A better and more secure console logging experience. Detects and prevents leaking secrets and API tokens into your logs.
 
-Check out [Securelog for scan](https://github.com/Onboardbase/securelog-scan) and [Securelog for react server component](https://github.com/Onboardbase/securelog-rsc)
+Need Secret scanning in other places?
+- [Securelog for your build and runtime logs](https://github.com/Onboardbase/securelog-scan)
+- [Securelog for your react server components](https://github.com/Onboardbase/securelog-rsc)
 
 </div>
 
