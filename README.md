@@ -202,6 +202,10 @@ This takes in a string and checks if the strings contains a secret, if it does, 
 import { scanSecretsInString } from 'securelogs';
 
 const safeString = await scanSecretsInString(
-  'This is a very long string with AKIAKSDKDBDSDSDBD AWS secrets attached'
-); // This is a very long string with AKIA******** AWS secrets attached
+  'This is a very long string with AKIAKSDKDBDSDSDBD AWS secrets attached',
+  options: {
+    maskedValue: "*"; // that is the masked value should be represented by "*", if masked value is an empty string, all found secrets wont have a value
+    visibleChars: 0; // that is no detected secrets should be returned
+  }
+); // This is a very long string with AWS secrets attached
 ```
