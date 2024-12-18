@@ -1,37 +1,18 @@
 import { isArray, isObject, isString } from './utils';
 import { stringOccurInObjectValues } from './stringOccurInObjectValue';
 
-export const checkForPotentialSecrets = (data: any) => {
-  return data
-    .map((argument: any) => {
-      if (isString(argument)) {
-        return stringOccurInObjectValues({
-          needle: argument,
-          obj: process.env,
-        });
-      }
+export const checkForPotentialSecrets = (data: any[]): string[] => {
+  return data.reduce((acc: string[], argument: any) => {
+    let result: string | string[] | null = [];
+    
+    if (isString(argument)) {
+      result = stringOccurInObjectValues({ needle: argument, obj: process.env });
+    } else if (isObject(argument)) {
+      result = checkForPotentialSecrets(Object.values(argument));
+    } else if (isArray(argument)) {
+      result = checkForPotentialSecrets(argument);
+    }
 
-      if (isObject(argument)) {
-        return checkForPotentialSecrets(Object.values(argument));
-      }
-
-      if (isArray(argument)) {
-        return checkForPotentialSecretInArrayItem(argument);
-      }
-      return null;
-    })
-    .filter((key: string) => !!key);
+    return result ? acc.concat(result) : acc;
+  }, []);
 };
-
-function checkForPotentialSecretInArrayItem(argumentItem: any[]) {
-  return argumentItem.map((arrayValue: any) => {
-    if (isObject(arrayValue)) {
-      return checkForPotentialSecrets(arrayValue);
-    }
-
-    if (isArray(arrayValue) || isString(arrayValue)) {
-      return checkForPotentialSecrets(arrayValue);
-    }
-    return arrayValue;
-  });
-}
