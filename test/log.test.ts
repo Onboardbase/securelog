@@ -81,4 +81,32 @@ describe('Test console.log', () => {
       'the value of the secret: "PORT", is being leaked!'
     );
   });
+
+  it('should mask secrets when they are part of an object', () => {
+    secureLog.log('running on port', {secretPort: secrets.PORT});
+    expect(mockObj.warn).toHaveBeenCalledWith(
+      'the value of the secret: "PORT", is being leaked!'
+    );
+  });
+
+  it('should mask secrets when they are part of an array', () => {
+    secureLog.log('running on port', [secrets.PORT]);
+    expect(mockObj.warn).toHaveBeenCalledWith(
+      'the value of the secret: "PORT", is being leaked!'
+    );
+  });
+
+  it('should mask secrets when they are part of a nested object', () => {
+    secureLog.log('running on port', {innerValue: {secretPort: secrets.PORT}});
+    expect(mockObj.warn).toHaveBeenCalledWith(
+      'the value of the secret: "PORT", is being leaked!'
+    );
+  });
+
+  it('should mask secrets when they are part of a nested array', () => {
+    secureLog.log('running on port', {innerValue: [secrets.PORT]});
+    expect(mockObj.warn).toHaveBeenCalledWith(
+      'the value of the secret: "PORT", is being leaked!'
+    );
+  });
 });
